@@ -1,0 +1,17 @@
+version: "3.9"
+services:
+  voxel:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: voxel-builder:latest
+    ports:
+      - "8080:8080"
+      - "8011:8011"
+    environment:
+      - PORT=8080
+    volumes:
+      # persisted local-storage DB will live here
+      - voxel_data:/home/node/.local/share
+volumes:
+  voxel_data:

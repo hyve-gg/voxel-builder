@@ -1,0 +1,48 @@
+# ───────────────────────────────────────────────────────────────────────────────
+# Deployment  (2 replicas, port 8011, mounts PVC)
+# ───────────────────────────────────────────────────────────────────────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dev-voxel-builder
+  namespace: dev
+  labels:
+    app: dev-voxel-builder
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: dev-voxel-builder
+  template:
+    metadata:
+      labels:
+        app: dev-voxel-builder
+    spec:
+      containers:
+        - name: dev-voxel-builder
+          image: 975050212377.dkr.ecr.us-east-2.amazonaws.com/voxel-builder-dev:latest
+          imagePullPolicy: Always
+          env:
+            - name: PORT
+              value: "8011"
+          ports:
+            - containerPort: 8011
+          volumeMounts:
+            - name: voxel-data
+              mountPath: /home/node/.local/share
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8011
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8011
+            initialDelaySeconds: 15
+            periodSeconds: 20
+      volumes:
+        - name: voxel-data
+          persistentVolumeClaim:
+            claimName: dev-voxel-builder-pvc
