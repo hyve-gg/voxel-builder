@@ -1,0 +1,14 @@
+# ───────────────────────────────────────────────────────────────────────────────
+# Persistent Volume Claim  (adjust storage class / size as needed)
+# ───────────────────────────────────────────────────────────────────────────────
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: prod-voxel-builder-pvc
+  namespace: prod
+spec:
+  accessModes: ["ReadWriteOnce"]           # EBS-style; use RWX if you back it with EFS
+  storageClassName: ebs-sc
+  resources:
+    requests:
+      storage: 20Gi   
