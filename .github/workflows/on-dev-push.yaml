@@ -4,8 +4,6 @@ on:
   push:
     branches: ["dev"]
 
-
-
 jobs:
   build-push-deploy:
     runs-on: ubuntu-latest
@@ -34,11 +32,10 @@ jobs:
         id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
           IMAGE_TAG: ${{ steps.get-commit-hash.outputs.commit-hash }}-${{ steps.get-timestamp.outputs.timestamp }}
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          docker build -t $ECR_REGISTRY/voxel-builder-dev:latest .
+          docker push $ECR_REGISTRY/voxel-builder-dev:latest
 
       - name: Configure Kubernetes client
         uses: silverlyra/setup-aws-eks@v0.1
